@@ -11,9 +11,9 @@ const pool = new pg.Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
 
-  ssl: {
-    rejectUnauthorized: false, // Required for Render's SSL connections
-  },
+  //   ssl: {
+  //     rejectUnauthorized: false, // Required for Render's SSL connections
+  //   },
 });
 
 export default pool;

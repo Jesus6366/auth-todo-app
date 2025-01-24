@@ -34,9 +34,9 @@ const App = () => {
 
   return (
     <div className="app">
-      <ListHeader listName={"🏖️ Lista para Vacaciones "} />
+      <ListHeader getData={getData} listName={" 🗒️  Lista de Tareas "} />
       {sortedTasks?.map((task) => (
-        <ListItem key={task.id} task={task} />
+        <ListItem getData={getData} key={task.id} task={task} />
       ))}
     </div>
   );

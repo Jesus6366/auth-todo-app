@@ -13,11 +13,14 @@ const Modal = ({ mode, setShowModal, task, getData }) => {
   const postData = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/todos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_SERVERURL}/api/todos`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.status === 200) {
         console.log("It worked");
@@ -33,7 +36,7 @@ const Modal = ({ mode, setShowModal, task, getData }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:5000/api/todos/${task.id}`,
+        `${import.meta.env.VITE_REACT_APP_SERVERURL}/api/todos/${task.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

@@ -10,7 +10,7 @@ const App = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/todos/${userEmail}`
+        `${import.meta.env.VITE_REACT_APP_SERVERURL}/api/todos/${userEmail}`
       );
 
       const data = await response.json();

@@ -8,9 +8,14 @@ const ListItem = ({ task, getData }) => {
 
   const deleteItem = async () => {
     try {
-      const response = fetch(`http://localhost:5000/api/todos${task.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_SERVERURL}/api/todos/${task.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      console.log(response);
 
       if (response.status === 200) {
         getData();
@@ -19,6 +24,7 @@ const ListItem = ({ task, getData }) => {
       console.error(error.message);
     }
   };
+
   return (
     <li className="list-item">
       <div className="info-container">

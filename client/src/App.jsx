@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import ListHeader from "./components/ListHeader";
 import ListItem from "./components/ListItem";
-
+import Auth from "./components/Auth";
+import { useCookies } from "react-cookie";
 const App = () => {
-  const userEmail = "jesus@test.com";
-
+  const [cookies, setCookies, removeCookie] = useCookies(null);
+  const authToken = cookies.AuthToken;
+  const userEmail = cookies.Email;
   const [tasks, setTasks] = useState(null);
 
   const getData = async () => {
@@ -21,7 +23,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    getData();
+    if (authToken) {
+      getData();
+    }
   }, []);
 
   console.log(tasks);
@@ -34,10 +38,15 @@ const App = () => {
 
   return (
     <div className="app">
-      <ListHeader getData={getData} listName={" 🗒️  Lista de Tareas "} />
-      {sortedTasks?.map((task) => (
-        <ListItem getData={getData} key={task.id} task={task} />
-      ))}
+      {!authToken && <Auth />}
+      {authToken && (
+        <>
+          <ListHeader getData={getData} listName={" 🗒️ Lista de Tareas "} />
+          {sortedTasks?.map((task) => (
+            <ListItem getData={getData} key={task.id} task={task} />
+          ))}
+        </>
+      )}
     </div>
   );
 };

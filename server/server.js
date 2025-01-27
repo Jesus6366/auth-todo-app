@@ -4,6 +4,8 @@ import pool from "./dbConnection.js";
 import cors from "cors";
 // unique identifier
 import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 //  to be able to read enviromental variables
 dotenv.config();
@@ -80,6 +82,58 @@ app.delete("/api/todos/:id", async (req, res) => {
   try {
     const response = await pool.query("DELETE FROM todos WHERE id=$1", [id]);
     return res.status(200).json(response);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// signup route
+app.post("/api/user/register", async (req, res) => {
+  const { email, password } = req.body;
+
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const register = await pool.query(
+      `INSERT INTO users (email, hashed_password) VALUES($1,$2)`,
+      [email, hashPassword]
+    );
+
+    const token = jwt.sign({ email }, "secret", { expiresIn: "1hr" });
+    res.json({ email, token });
+  } catch (error) {
+    console.error(error.message);
+    if (error) {
+      res.json({ details: error.detail });
+    }
+  }
+});
+
+//login route
+app.post("/api/user/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const users = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+
+    if (users.rowCount === 0) {
+      return res.json({ detail: "user does not exist " });
+    }
+
+    const success = await bcrypt.compare(
+      password,
+      users.rows[0].hashed_password
+    );
+
+    const token = jwt.sign({ email }, "secret", { expiresIn: "1hr" });
+
+    if (success) {
+      return res.json({ email: users.rows[0].email, token });
+    } else {
+      return res.json({ detail: "Login failed" });
+    }
   } catch (error) {
     console.error(error.message);
   }

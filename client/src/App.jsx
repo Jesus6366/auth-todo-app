@@ -42,11 +42,13 @@ const App = () => {
       {authToken && (
         <>
           <ListHeader getData={getData} listName={" 🗒️ Lista de Tareas "} />
+          <p className="user-email">Welcome Back {userEmail}</p>
           {sortedTasks?.map((task) => (
             <ListItem getData={getData} key={task.id} task={task} />
           ))}
         </>
       )}
+      <p className="copyright">©️ Creative Coding LLC</p>
     </div>
   );
 };

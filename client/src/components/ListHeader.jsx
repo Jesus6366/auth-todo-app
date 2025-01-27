@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
+import { useCookies } from "react-cookie";
 
 const ListHeader = ({ listName, getData }) => {
   const [showModal, setShowModal] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(null);
 
   const signOut = () => {
     console.log("Signing out");
+    removeCookie("Email");
+    removeCookie("AuthToken");
+    window.location.reload();
   };
   return (
     <div className="list-header">
@@ -15,7 +20,7 @@ const ListHeader = ({ listName, getData }) => {
           AGREGAR
         </button>
         <button className="signout" onClick={signOut}>
-          REGISTRAR
+          CERRAR SESION
         </button>
       </div>
       {showModal && (
